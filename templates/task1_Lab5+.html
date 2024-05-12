@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Job</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Add Job</h1>
+        <form class="mt-4" method="POST" action="/add_job">
+            <div class="form-group">
+                <label for="job">Job:</label>
+                <input type="text" class="form-control" id="job" name="job">
+            </div>
+            <div class="form-group">
+                <label for="team_leader">Team Leader:</label>
+                <input type="text" class="form-control" id="team_leader" name="team_leader">
+            </div>
+            <div class="form-group">
+                <label for="work_size">Work Size (hours):</label>
+                <input type="text" class="form-control" id="work_size" name="work_size">
+            </div>
+            <div class="form-group">
+                <label for="collaborators">Collaborators:</label>
+                <input type="text" class="form-control" id="collaborators" name="collaborators">
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="is_finished" name="is_finished">
+                <label class="form-check-label" for="is_finished">Is Finished</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Job</button>
+        </form>
+    </div>
+</body>
+</html>

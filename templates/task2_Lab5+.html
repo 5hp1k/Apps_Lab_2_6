@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Department</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Add Department</h1>
+        <form class="mt-4" method="POST" action="/add_department">
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" class="form-control" id="title" name="title">
+            </div>
+            <div class="form-group">
+                <label for="chief">Chief:</label>
+                <input type="text" class="form-control" id="chief" name="chief">
+            </div>
+            <div class="form-group">
+                <label for="members">Members:</label>
+                <input type="text" class="form-control" id="members" name="members">
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" name="email">
+            </div>
+            <button type="submit" class="btn btn-primary">Add Department</button>
+        </form>
+    </div>
+</body>
+</html>
