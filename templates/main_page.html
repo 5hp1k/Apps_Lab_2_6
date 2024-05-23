@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Job List</title>
+</head>
+<body>
+    <h1>Welcome, User {{ user_id }}</h1>
+    <button onclick="window.location.href='{{ url_for('logout') }}'">Logout</button>
+    {% if user_id %}
+        <button>Add job</button>
+    {% endif %}
+    <div>
+        {% for job in jobs %}
+            <div>
+                <h2>{{ job.title }}</h2>
+                <p>{{ job.description }}</p>
+                {% if user_id == 1 or user_id == job.creator_id %}
+                    <button>Edit</button>
+                    <button>Delete</button>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

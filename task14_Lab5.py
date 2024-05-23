@@ -1,20 +1,27 @@
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for
-from sqlalchemy import create_engine
 from sqlalchemy import create_engine, Column, Integer, String, DateTime
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+
+
+engine = create_engine('sqlite:///mars_explorer.db')
+Base = declarative_base()
 
 
 class User(Base):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
     surname = Column(String)
     name = Column(String)
     age = Column(Integer)
     position = Column(String)
-    specialty = Column(String)
+    speciality = Column(String)
+    address = Column(String)
     email = Column(String, unique=True)
     hashed_password = Column(String)
+    modified_date = Column(DateTime)
 
 
 app = Flask(__name__)
