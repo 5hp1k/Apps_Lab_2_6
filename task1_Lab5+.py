@@ -4,6 +4,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+
 app = Flask(__name__)
 Base = declarative_base()
 
@@ -42,7 +43,8 @@ def add_job():
 
         if is_finished:
             new_job = Job(job=job, team_leader=team_leader, work_size=work_size,
-                          collaborators=collaborators, start_date=datetime.now(), end_date=datetime.now() + timedelta(hours=int(work_size)), is_finished=is_finished)
+                          collaborators=collaborators, start_date=datetime.now(), end_date=datetime.now() +
+                          timedelta(hours=int(work_size)), is_finished=is_finished)
         else:
             new_job = Job(job=job, team_leader=team_leader, work_size=work_size,
                           collaborators=collaborators, start_date=datetime.now(), is_finished=is_finished)

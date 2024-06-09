@@ -1,26 +1,46 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Job List</title>
+    <title>Главная страница</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Welcome, User {{ user_id }}</h1>
-    <button onclick="window.location.href='{{ url_for('logout') }}'">Logout</button>
-    {% if user_id %}
-        <button>Add job</button>
-    {% endif %}
-    <div>
-        {% for job in jobs %}
-            <div>
-                <h2>{{ job.title }}</h2>
-                <p>{{ job.description }}</p>
-                {% if user_id == 1 or user_id == job.creator_id %}
-                    <button>Edit</button>
-                    <button>Delete</button>
-                {% endif %}
-            </div>
-        {% endfor %}
+    <div class="container">
+        {% if user %}
+        <h1>Добро пожаловать на сайт Марсианской Миссии, {{ user.name }} {{ user.surname }}!</h1>
+        <button class="btn btn-danger" onclick="window.location.href='{{ url_for('logout') }}'">Выйти</button>
+        <button class="btn btn-success" onclick="window.location.href='{{ url_for('add_job') }}'">Добавить работу</button>
+        {% else %}
+        <h1 class="mt-5">Добро пожаловать на сайт Марсианской Миссии!</h1>
+        <div class="mt-4">
+            <button class="btn btn-primary" onclick="window.location.href='{{ url_for('register') }}'">Регистрация</button>
+            <button class="btn btn-secondary" onclick="window.location.href='{{ url_for('login') }}'">Вход</button>
+        </div>
+        {% endif %}
+        <div class="mt-4">
+            {% for job in jobs %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h2 class="card-title">{{ job.job }}</h2>
+                        <p class="card-text">Руководитель команды: {{ job.team_leader }}</p>
+                        <p class="card-text">Объем работы: {{ job.work_size }} часов</p>
+                        <p class="card-text">Соавторы: {{ job.collaborators }}</p>
+                        <p class="card-text">Дата начала: {{ job.start_date.strftime('%Y-%m-%d') if job.start_date else 'Не указано' }}</p>
+                        <p class="card-text">Дата окончания: {{ job.end_date.strftime('%Y-%m-%d') if job.end_date else 'Не указано' }}</p>
+                        <p class="card-text">Статус: {{ 'Завершена' if job.is_finished else 'В процессе' }}</p>
+                        {% if user %}
+                            {% if user.id == 1 or user.id == job.team_leader %}
+                                <button class="btn btn-primary" onclick="window.location.href='{{ url_for('edit_job', job_id=job.id) }}'">Изменить</button>
+                                <form action="{{ url_for('delete_job', job_id=job.id) }}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger">Удалить</button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </body>
 </html>
