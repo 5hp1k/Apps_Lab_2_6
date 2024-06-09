@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from sqlalchemy.orm import sessionmaker
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from models import User, Job, engine
+from models import User, Job, Department, engine
 
 
 app = Flask(__name__)
@@ -163,6 +163,85 @@ def delete_job(job_id):
     db_session.commit()
     db_session.close()
     return redirect(url_for('index'))
+
+
+@app.route('/departments')
+def departments():
+    db_session = Session()
+    departments = db_session.query(Department).all()
+
+    if "user_id" in session:
+        user_id = session['user_id']
+        user = db_session.query(User).filter_by(id=user_id).first()
+        db_session.close()
+
+        return render_template('departments.html', user=user, departments=departments)
+    else:
+        return render_template('departments.html', user=None, departments=departments)
+
+
+@app.route('/add_department', methods=['GET', 'POST'])
+def add_department():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        title = request.form['title']
+        chief = request.form['chief']
+        members = request.form['members']
+        email = request.form['email']
+
+        new_department = Department(
+            title=title,
+            chief=chief,
+            members=members,
+            email=email
+        )
+
+        db_session = Session()
+        db_session.add(new_department)
+        db_session.commit()
+        db_session.close()
+
+        return redirect(url_for('departments'))
+
+    return render_template('add_department.html')
+
+
+@app.route('/edit_department/<int:department_id>', methods=['GET', 'POST'])
+def edit_department(department_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    db_session = Session()
+    department = db_session.query(
+        Department).filter_by(id=department_id).first()
+
+    if request.method == 'POST':
+        department.title = request.form['title']
+        department.chief = request.form['chief']
+        department.members = request.form['members']
+        department.email = request.form['email']
+        db_session.commit()
+        db_session.close()
+        return redirect(url_for('departments'))
+
+    db_session.close()
+    return render_template('edit_department.html', department=department)
+
+
+@app.route('/delete_department/<int:department_id>', methods=['POST'])
+def delete_department(department_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    db_session = Session()
+    department = db_session.query(
+        Department).filter_by(id=department_id).first()
+    db_session.delete(department)
+    db_session.commit()
+    db_session.close()
+    return redirect(url_for('departments'))
 
 
 @app.route('/logout')

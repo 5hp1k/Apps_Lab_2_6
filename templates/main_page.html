@@ -8,14 +8,16 @@
 <body>
     <div class="container">
         {% if user %}
-        <h1>Добро пожаловать на сайт Марсианской Миссии, {{ user.name }} {{ user.surname }}!</h1>
+        <h1>Добро пожаловать на сайт Марсианской Миссии, {{ user.name }} {{ user.surname }} (id: {{ user.id }})!</h1>
         <button class="btn btn-danger" onclick="window.location.href='{{ url_for('logout') }}'">Выйти</button>
         <button class="btn btn-success" onclick="window.location.href='{{ url_for('add_job') }}'">Добавить работу</button>
+        <button class="btn btn-info" onclick="window.location.href='{{ url_for('departments') }}'">Просмотр департаментов</button>
         {% else %}
         <h1 class="mt-5">Добро пожаловать на сайт Марсианской Миссии!</h1>
         <div class="mt-4">
             <button class="btn btn-primary" onclick="window.location.href='{{ url_for('register') }}'">Регистрация</button>
             <button class="btn btn-secondary" onclick="window.location.href='{{ url_for('login') }}'">Вход</button>
+            <button class="btn btn-info" onclick="window.location.href='{{ url_for('departments') }}'">Просмотр департаментов</button>
         </div>
         {% endif %}
         <div class="mt-4">

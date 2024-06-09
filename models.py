@@ -1,5 +1,5 @@
-# models.py
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime, Boolean
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -30,6 +30,17 @@ class Job(Base):
     start_date = Column(DateTime)
     end_date = Column(DateTime)
     is_finished = Column(Boolean)
+
+
+class Department(Base):
+    __tablename__ = 'departments'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(String)
+    chief = Column(Integer, ForeignKey('users.id'))
+    members = Column(String)  # Хранение списка ID в виде строки
+    email = Column(String, unique=True)
+
+    chief_user = relationship("User", foreign_keys=[chief])
 
 
 engine = create_engine('sqlite:///mars_explorer.db')
