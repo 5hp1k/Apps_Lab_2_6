@@ -33,7 +33,7 @@ class Job(Base):
     __tablename__ = 'jobs'
     id = Column(Integer, primary_key=True)
     job = Column(String)
-    team_leader = Column(String)
+    team_leader = Column(Integer)
     work_size = Column(Integer)
     collaborators = Column(String)
     start_date = Column(DateTime)

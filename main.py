@@ -22,6 +22,7 @@ def index():
         db_session = Session()
         user = db_session.query(User).filter_by(id=user_id).first()
         db_session.close()
+
         return render_template('main_page.html', user=user, jobs=jobs)
     else:
         return render_template('main_page.html', user=None, jobs=jobs)
