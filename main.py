@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, joinedload
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from models import User, Job, Department, engine
+from models import User, Job, Category, Department, engine
 
 
 app = Flask(__name__)
@@ -14,7 +14,7 @@ Session = sessionmaker(bind=engine)
 @app.route('/')
 def index():
     db_session = Session()
-    jobs = db_session.query(Job).all()
+    jobs = db_session.query(Job).options(joinedload(Job.categories)).all()
     db_session.close()
 
     if 'user_id' in session:
@@ -104,7 +104,8 @@ def add_job():
         start_date = request.form['start_date']
         end_date = request.form['end_date']
         is_finished = request.form.get('is_finished') == 'on'
-        user_id = session['user_id']
+
+        end_date = None if is_finished else request.form['end_date']
 
         new_job = Job(
             job=job_title,
@@ -123,7 +124,11 @@ def add_job():
 
         return redirect(url_for('index'))
 
-    return render_template('add_job.html')
+    db_session = Session()
+    categories = db_session.query(Category).all()
+    db_session.close()
+
+    return render_template('add_job.html', categories=categories)
 
 
 @app.route('/edit_job/<int:job_id>', methods=['GET', 'POST'])
@@ -141,15 +146,25 @@ def edit_job(job_id):
         job.collaborators = request.form['collaborators']
         job.start_date = datetime.strptime(
             request.form['start_date'], '%Y-%m-%d')
-        job.end_date = datetime.strptime(
-            request.form['end_date'], '%Y-%m-%d')
         job.is_finished = request.form.get('is_finished') == 'on'
+
+        end_date = None if job.is_finished else request.form['end_date']
+        job.end_date = datetime.strptime(
+            end_date, '%Y-%m-%d') if end_date else None
+
+        category_id = request.form['category']
+        category = db_session.query(Category).filter_by(id=category_id).first()
+        job.categories = [category]
+
         db_session.commit()
         db_session.close()
+
         return redirect(url_for('index'))
 
+    categories = db_session.query(Category).all()
     db_session.close()
-    return render_template('edit_job.html', job=job)
+
+    return render_template('edit_job.html', job=job, categories=categories)
 
 
 @app.route('/delete_job/<int:job_id>', methods=['POST'])

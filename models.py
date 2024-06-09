@@ -1,9 +1,18 @@
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime, Boolean
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine, Table, Column, Integer, String, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+from datetime import datetime
 
 
 Base = declarative_base()
+
+job_category_association = Table('job_category_association', Base.metadata,
+                                 Column('job_id', Integer,
+                                        ForeignKey('jobs.id')),
+                                 Column('category_id', Integer,
+                                        ForeignKey('categories.id'))
+                                 )
 
 
 class User(Base):
@@ -30,6 +39,16 @@ class Job(Base):
     start_date = Column(DateTime)
     end_date = Column(DateTime)
     is_finished = Column(Boolean)
+    categories = relationship(
+        "Category", secondary=job_category_association, back_populates="jobs")
+
+
+class Category(Base):
+    __tablename__ = 'categories'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, unique=True)
+    jobs = relationship(
+        "Job", secondary=job_category_association, back_populates="categories")
 
 
 class Department(Base):
