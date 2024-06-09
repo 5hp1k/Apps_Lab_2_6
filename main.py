@@ -6,7 +6,7 @@ from models import User, Job, Category, Department, engine
 
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # TODO: Не забыть ключ
+app.secret_key = 'top_secret_key'
 
 Session = sessionmaker(bind=engine)
 
@@ -43,8 +43,8 @@ def register():
         if password != confirm_password:
             return "Пароли не совпадают"
 
-        # hashed_password = generate_password_hash(password)
-        hashed_password = password
+        hashed_password = generate_password_hash(password)
+        # hashed_password = password
         new_user = User(
             surname=surname,
             name=name,
@@ -80,8 +80,8 @@ def login():
         db_session = Session()
         user = db_session.query(User).filter_by(email=email).first()
 
-        # if user and check_password_hash(user.hashed_password, password):
-        if user and user.hashed_password == password:
+        if user and check_password_hash(user.hashed_password, password):
+            # if user and user.hashed_password == password:
             session['user_id'] = user.id
             db_session.close()
             return redirect(url_for('index'))
